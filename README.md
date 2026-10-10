@@ -1,17 +1,20 @@
-# bean_box
+# BeanBox
 
-Coffee shop app
+Coffee shop mobile app built with Flutter.
 
-## Getting Started
+## Problem and user
+Helps coffee lovers quickly browse drinks, see details and save favorites.
 
-This project is a starting point for a Flutter application.
+## Features (Milestone 1)
+- Home screen with a list of products (Card, Row, Column)
+- Detail screen with Stack banner, tags and bottom bar
+- Favorite button (StatefulWidget + setState)
 
-A few resources to get you started if this is your first Flutter project:
+## Project structure
+- lib/models - data classes
+- lib/screens - app screens
+- lib/widgets - reusable widgets
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Run
+flutter pub get
+flutter run -d chrome
