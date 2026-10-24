@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/product.dart';
+import '../models/cart.dart';
 
 class DetailScreen extends StatefulWidget {
   final Product product;
@@ -151,6 +152,7 @@ class _DetailScreenState extends State<DetailScreen> {
               ),
               ElevatedButton(
                 onPressed: () {
+                  addToCart(product);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('${product.name} added to cart')),
                   );
