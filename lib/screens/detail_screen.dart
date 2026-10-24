@@ -3,15 +3,28 @@ import '../models/product.dart';
 
 class DetailScreen extends StatefulWidget {
   final Product product;
+  final bool isFavorite;
+  final void Function(Product) onToggleFavorite;
 
-  const DetailScreen({super.key, required this.product});
+  const DetailScreen({
+    super.key,
+    required this.product,
+    required this.isFavorite,
+    required this.onToggleFavorite,
+  });
 
   @override
   State<DetailScreen> createState() => _DetailScreenState();
 }
 
 class _DetailScreenState extends State<DetailScreen> {
-  bool isFavorite = false;
+  late bool isFavorite;
+
+  @override
+  void initState() {
+    super.initState();
+    isFavorite = widget.isFavorite;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,15 +41,19 @@ class _DetailScreenState extends State<DetailScreen> {
               children: [
                 Stack(
                   children: [
-                    Container(
+                    Image.asset(
+                      product.image,
                       height: 220,
                       width: double.infinity,
-                      color: Colors.brown.shade200,
-                      child: const Icon(
-                        Icons.coffee,
-                        size: 100,
-                        color: Colors.white,
-                      ),
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          height: 220,
+                          width: double.infinity,
+                          color: Colors.brown.shade200,
+                          child: const Icon(Icons.coffee, size: 100),
+                        );
+                      },
                     ),
                     Positioned(
                       top: 8,
@@ -50,6 +67,7 @@ class _DetailScreenState extends State<DetailScreen> {
                           color: Colors.red,
                         ),
                         onPressed: () {
+                          widget.onToggleFavorite(product);
                           setState(() {
                             isFavorite = !isFavorite;
                           });
@@ -101,6 +119,14 @@ class _DetailScreenState extends State<DetailScreen> {
                       Text(
                         product.description,
                         style: const TextStyle(fontSize: 16),
+                      ),
+                      const SizedBox(height: 24),
+                      OutlinedButton.icon(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(Icons.arrow_back),
+                        label: const Text('Back to menu'),
                       ),
                     ],
                   ),

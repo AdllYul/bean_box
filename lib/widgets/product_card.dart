@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
-
 import '../models/product.dart';
 import '../screens/detail_screen.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
+  final bool isFavorite;
+  final void Function(Product) onToggleFavorite;
 
-  const ProductCard({super.key, required this.product});
+  const ProductCard({
+    super.key,
+    required this.product,
+    required this.isFavorite,
+    required this.onToggleFavorite,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +24,11 @@ class ProductCard extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => DetailScreen(product: product),
+              builder: (context) => DetailScreen(
+                product: product,
+                isFavorite: isFavorite,
+                onToggleFavorite: onToggleFavorite,
+              ),
             ),
           );
         },
@@ -30,9 +40,10 @@ class ProductCard extends StatelessWidget {
               height: 160,
               width: double.infinity,
               fit: BoxFit.cover,
-              errorBuilder: (context, error, StackTrace) {
+              errorBuilder: (context, error, stackTrace) {
                 return Container(
                   height: 160,
+                  width: double.infinity,
                   color: Colors.brown.shade100,
                   child: const Icon(Icons.coffee, size: 60),
                 );
@@ -58,11 +69,8 @@ class ProductCard extends StatelessWidget {
                         const SizedBox(height: 8),
                         Row(
                           children: [
-                            const Icon(
-                              Icons.star,
-                              size: 16,
-                              color: Colors.amber,
-                            ),
+                            const Icon(Icons.star,
+                                size: 16, color: Colors.amber),
                             const SizedBox(width: 4),
                             Text('${product.rating}'),
                           ],
