@@ -1,8 +1,20 @@
-import 'package:flutter/material.dart';
-import 'screens/root_screen.dart';
 import 'dart:ui';
+
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'providers/cart_provider.dart';
+import 'screens/root_screen.dart';
+
 void main() {
-  runApp(const MyApp());
+  runApp(
+    // CartProvider sits ABOVE MaterialApp, so every route
+    // (including screens opened with Navigator.push) can read it.
+    ChangeNotifierProvider(
+      create: (_) => CartProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

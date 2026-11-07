@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/product.dart';
 import '../screens/detail_screen.dart';
+import 'add_to_cart_button.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
@@ -78,12 +79,20 @@ class ProductCard extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Text(
-                    '\$${product.price}',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  const SizedBox(width: 12),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        '\$${product.price.toStringAsFixed(2)}',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      AddToCartButton(product: product),
+                    ],
                   ),
                 ],
               ),
