@@ -74,20 +74,7 @@ class CartScreen extends StatelessWidget {
                     return ListTile(
                       leading: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: Image.asset(
-                          product.image,
-                          width: 56,
-                          height: 56,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              width: 56,
-                              height: 56,
-                              color: Colors.brown.shade100,
-                              child: const Icon(Icons.coffee),
-                            );
-                          },
-                        ),
+                        child: _CartThumbnail(image: product.image),
                       ),
                       title: Text(product.name),
                       subtitle:
@@ -176,6 +163,47 @@ class _EmptyCart extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Coffee items use asset images, Cloud Store items use network images.
+class _CartThumbnail extends StatelessWidget {
+  final String image;
+
+  const _CartThumbnail({required this.image});
+
+  @override
+  Widget build(BuildContext context) {
+    Widget fallback(BuildContext context, Object error, StackTrace? stack) {
+      return Container(
+        width: 56,
+        height: 56,
+        color: Colors.brown.shade100,
+        child: const Icon(Icons.shopping_bag_outlined),
+      );
+    }
+
+    if (image.startsWith('http')) {
+      return Container(
+        width: 56,
+        height: 56,
+        color: Colors.white,
+        padding: const EdgeInsets.all(4),
+        child: Image.network(
+          image,
+          fit: BoxFit.contain,
+          webHtmlElementStrategy: WebHtmlElementStrategy.fallback,
+          errorBuilder: fallback,
+        ),
+      );
+    }
+    return Image.asset(
+      image,
+      width: 56,
+      height: 56,
+      fit: BoxFit.cover,
+      errorBuilder: fallback,
     );
   }
 }
