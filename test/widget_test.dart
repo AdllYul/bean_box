@@ -1,15 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:bean_box/main.dart';
 import 'package:bean_box/models/product.dart';
 import 'package:bean_box/providers/cart_provider.dart';
+import 'package:bean_box/providers/settings_provider.dart';
+import 'package:bean_box/vault/services/vault_storage.dart';
 
-Widget buildApp() => ChangeNotifierProvider(
-      create: (_) => CartProvider(),
-      child: const MyApp(),
-    );
+Future<Widget> buildApp() async {
+  SharedPreferences.setMockInitialValues({});
+  final storage = VaultStorage(await SharedPreferences.getInstance());
+  return MultiProvider(
+    providers: [
+      Provider<VaultStorage>.value(value: storage),
+      ChangeNotifierProvider(create: (_) => SettingsProvider(storage)),
+      ChangeNotifierProvider(create: (_) => CartProvider()),
+    ],
+    child: const MyApp(),
+  );
+}
 
 Finder badgeText(String text) =>
     find.descendant(of: find.byType(Badge), matching: find.text(text));
@@ -37,7 +48,7 @@ void main() {
 
   testWidgets('removing an item in Cart syncs back to Catalog',
       (tester) async {
-    await tester.pumpWidget(buildApp());
+    await tester.pumpWidget(await buildApp());
     const toggleKey = ValueKey('cart-toggle-1'); // Espresso
 
     // Screen 1: add to cart -> toggle + badge update

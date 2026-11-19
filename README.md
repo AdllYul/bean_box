@@ -45,3 +45,17 @@ New **Store** tab that loads products from `https://fakestoreapi.com/products`.
 - `test/store_test.dart` — JSON parsing, status codes, offline, timeout, and error → retry → success
 
 Offline test in Chrome: DevTools → Network → **Offline**, then pull to refresh / Retry Connection. On a phone or emulator: airplane mode.
+
+## Lab 11: Local Data Storage & Offline Persistence
+
+The **Profile** tab is now an offline-first Notes & Settings Vault (`shared_preferences: ^2.2.2`).
+
+- `main.dart` — `WidgetsFlutterBinding.ensureInitialized()` + `await SharedPreferences.getInstance()` **before** `runApp()`, so the saved theme is applied on the first frame (no white flash)
+- `lib/vault/services/vault_storage.dart` — all disk access: `getBool/setBool('app_theme_dark_mode')` with `?? false`, `getString/setString('user_display_name')` with `?? 'Guest User'`, notes as one JSON string
+- `lib/providers/settings_provider.dart` — dark mode for the whole app (`themeMode`)
+- `lib/vault/models/note_item.dart` — `NoteItem` (`id`, `title`, `dateText`, `isCompleted`) with `toJson()` / `fromJson()`
+- `lib/screens/profile_screen.dart` — name field + Save, dark mode switch, notes: add (prepend), toggle, delete; every change re-encodes the list with `jsonEncode` and saves it
+- `test/vault_test.dart` — JSON round trip, defaults, values surviving a new instance, and the add/toggle/delete flow
+
+Cold restart test: add 2 notes, turn on dark mode, fully close the app (swipe it away / stop the run), reopen — everything is restored.
+Note: SharedPreferences is plain, unencrypted storage. Secrets (passwords, tokens) belong in Keychain (iOS) / KeyStore (Android), e.g. via `flutter_secure_storage`.
